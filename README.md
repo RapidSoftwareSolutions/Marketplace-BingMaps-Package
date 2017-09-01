@@ -57,7 +57,7 @@ Get elevation values (in meters) for a set of locations, a polyline path or area
 | rows   | Number     |  Specifies the number of rows and columns to use to divide the bounding box area into a grid. The rows and columns that define the bounding box each count as two (2) of the rows and columns. Elevation values are returned for all vertices of the grid.
 | cols   | Number     |  Specifies the number of rows and columns to use to divide the bounding box area into a grid. The rows and columns that define the bounding box each count as two (2) of the rows and columns. Elevation values are returned for all vertices of the grid.
 | samples| Number     | Specifies the number of equally-spaced elevation values to provide along a polyline path.
-| heights| Number     | Specifies which sea level model to use to calculate elevation.
+| heights| String     | Specifies which sea level model to use to calculate elevation.
 
 ## BingMaps.getStaticMap
 Get a static map. You can also display a route on a static map, and you can request static map metadata. Static map metadata includes the absolute (latitude and longitude) and relative (with respect to the map) coordinates and size of pushpins as well as the map area and center point.
@@ -67,6 +67,7 @@ Get a static map. You can also display a route on a static map, and you can requ
 | key            | credentials| Your API key
 | query    | String        | A query string that is used to determine the map location to display.
 | mapLayer    | String        | A display layer that renders on top of the imagery set. Must be: TrafficFlow
+| zoomLevel    | Number| The level of zoom to display. An integer between 0 and 21.
 
 ## BingMaps.getImageryMetadata
 Get metadata for imagery that is hosted by Bing Maps. The imagery metadata returned includes URLs and dimensions for imagery tiles, ranges of zoom levels, and imagery vintage information.
@@ -74,7 +75,7 @@ Get metadata for imagery that is hosted by Bing Maps. The imagery metadata retur
 | Field      | Type       | Description
 |------------|------------|----------
 | key        | credentials| Your API key
-| imagerySet | Select     | The type of imagery for which you are requesting metadata. Must be: Aerial - Aerial imagery.          AerialWithLabels - Aerial imagery with a road overlay. Birdseye - Bird’s eye (oblique-angle) imagery. BirdseyeWithLabels - Bird’s eye imagery with a road overlay. BirdseyeV2 - The second generation Bird’s eye (oblique-angle) imagery. BirdseyeV2WithLabels - The second generation Bird’s eye (oblique-angle) imagerywith a road overlay. CanvasDark - A dark version of the road maps. CanvasLight - A lighter version of the road maps which also has some of the details such as hill shading disabled. CanvasGray - A grayscale version of the road maps. Road - Roads without additional imagery. Uses the legacy static tile service. RoadOnDemand - Roads without additional imagery. Uses the dynamic tile service. OrdnanceSurvey - Ordnance Survey imagery. This imagery is visible only for the London area.
+| imagerySet | Select     | The type of imagery for which you are requesting metadata. Must be: Aerial - Aerial imagery.          AerialWithLabels - Aerial imagery with a road overlay. Birdseye - Bird’s eye (oblique-angle) imagery. AerialWithLabelsOnDemand. BirdseyeWithLabels - Bird’s eye imagery with a road overlay. BirdseyeV2 - The second generation Bird’s eye (oblique-angle) imagery. BirdseyeV2WithLabels - The second generation Bird’s eye (oblique-angle) imagerywith a road overlay. CanvasDark - A dark version of the road maps. CanvasLight - A lighter version of the road maps which also has some of the details such as hill shading disabled. CanvasGray - A grayscale version of the road maps. Road - Roads without additional imagery. Uses the legacy static tile service. RoadOnDemand - Roads without additional imagery. Uses the dynamic tile service. OrdnanceSurvey - Ordnance Survey imagery. This imagery is visible only for the London area.
 | centerPoint| Map        | A point on the Earth where the map is centered. Example: centerPoint=47.610,-122.107
 | include    | Select     | Specifies to provide additional information about the imagery as part of the response. The only option for this parameter is ImageryProviders. When this parameter value is specified, information about the imagery providers is returned in the response.
 | orientation| Number     | The orientation of the viewport to use for the imagery metadata. This option only applies to Birdseye imagery.
@@ -99,7 +100,7 @@ Get a walking, driving or transit route by specifying a series of waypoints. A w
 | dateTime               | DatePicker | A string that contains the date and time formatted as a DateTime value. 
 | timeType               | Select     | Specifies how to interpret the date and transit time value that is specified by the dateTime parameter. Must be: Arrival, Departure, LastAvailable
 | maxSolutions           | Number     | Specifies the maximum number of transit or driving routes to return.
-| travelMode             | Number     | One of the following values: Driving, Walking, Transit
+| travelMode             | String     | One of the following values: Driving, Walking, Transit
 
 ## BingMaps.calculateRouteFromMajorRoads
 Return a driving route to a location from major roads in four directions (West, North, East and South). You can use this block for routes in the United States, Canada and Mexico.
