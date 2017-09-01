@@ -12,7 +12,7 @@ $app->post('/api/BingMaps/getStaticMap', function ($request, $response) {
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['key'=>'key','centerPoint'=>'centerPoint', 'query'=>'query', 'mapLayer'=>'mapLayer'];
+    $requiredParams = ['key'=>'key', 'query'=>'query', 'mapLayer'=>'mapLayer'];
     $optionalParams = [];
     $bodyParams = [
        'query' => ['key','mapLayer']
