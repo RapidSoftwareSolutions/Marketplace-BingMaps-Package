@@ -15,7 +15,7 @@ $app->post('/api/BingMaps/getImageryMetadata', function ($request, $response) {
     $requiredParams = ['key'=>'key','imagerySet'=>'imagerySet'];
     $optionalParams = ['centerPoint'=>'centerPoint','include'=>'include','orientation'=>'orientation','uriScheme'=>'uriScheme','zoomLevel'=>'zoomLevel'];
     $bodyParams = [
-       'query' => ['key','imagerySet','centerPoint','include','orientation','uriScheme','zoomLevel']
+       'query' => ['key','include','orientation','uriScheme','zoomLevel']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
@@ -23,7 +23,7 @@ $app->post('/api/BingMaps/getImageryMetadata', function ($request, $response) {
     
 
     $client = $this->httpClient;
-    $query_str = "http://dev.virtualearth.net/REST/v1/Imagery/Metadata/imagerySet";
+    $query_str = "http://dev.virtualearth.net/REST/v1/Imagery/Metadata/{$data['imagerySet']}/{$data['centerPoint']}";
 
     
 

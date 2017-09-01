@@ -4,7 +4,7 @@ $app->post('/api/BingMaps/getStaticMap', function ($request, $response) {
 
     $settings = $this->settings;
     $checkRequest = $this->validation;
-    $validateRes = $checkRequest->validate($request, ['key','centerPoint']);
+    $validateRes = $checkRequest->validate($request, ['key','centerPoint','query','mapLayer']);
 
     if(!empty($validateRes) && isset($validateRes['callback']) && $validateRes['callback']=='error') {
         return $response->withHeader('Content-type', 'application/json')->withStatus(200)->withJson($validateRes);
@@ -12,20 +12,17 @@ $app->post('/api/BingMaps/getStaticMap', function ($request, $response) {
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['key'=>'key','centerPoint'=>'centerPoint'];
-    $optionalParams = ['declutterPins'=>'declutterPins','dpi'=>'dpi','format'=>'format','imagerySet'=>'imagerySet','mapArea'=>'mapArea','mapLayer'=>'mapLayer','mapSize'=>'mapSize','pushpin'=>'pushpin','mapMetadata'=>'mapMetadata','query'=>'query','zoomLevel'=>'zoomLevel','highlightEntity'=>'highlightEntity','entityType'=>'entityType','style'=>'style'];
+    $requiredParams = ['key'=>'key','centerPoint'=>'centerPoint', 'query'=>'query', 'mapLayer'=>'mapLayer'];
+    $optionalParams = [];
     $bodyParams = [
-       'query' => ['key','centerPoint','declutterPins','dpi','format','imagerySet','mapArea','mapLayer','mapSize','pushpin','mapMetadata','query','zoomLevel','highlightEntity','entityType','style']
+       'query' => ['key','mapLayer']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
 
-    
-
     $client = $this->httpClient;
-    $query_str = "http://dev.virtualearth.net/REST/v1/Imagery/Map/imagerySet/centerPoint/zoomLevel";
+    $query_str = "https://dev.virtualearth.net/REST/V1/Imagery/Map/Road/{$data['query']}";
 
-    
 
     $requestParams = \Models\Params::createRequestBody($data, $bodyParams);
     $requestParams['headers'] = [];
@@ -34,51 +31,41 @@ $app->post('/api/BingMaps/getStaticMap', function ($request, $response) {
         $resp = $client->get($query_str, $requestParams);
         $responseBody = $resp->getBody()->getContents();
 
-        if(in_array($resp->getStatusCode(), ['200', '201', '202', '203', '204'])) {
-            $result['callback'] = 'success';
-            $result['contextWrites']['to'] = is_array($responseBody) ? $responseBody : json_decode($responseBody);
-            if(empty($result['contextWrites']['to'])) {
-                $result['contextWrites']['to']['status_msg'] = "Api return no results";
+        if ($resp->getStatusCode() == 200) {
+            $size = $resp->getHeader('Content-Length')[0];
+            $uploadServiceResponse = $client->post($settings['uploadServiceUrl'], [
+                'multipart' => [
+                    [
+                        'name' => 'length',
+                        'contents' => $size
+                    ],
+                    [
+                        "name" => "file",
+                        "filename" => "map.jpeg",
+                        "contents" => $responseBody
+                    ]
+
+                ]
+            ]);
+            $uploadServiceResponseBody = $uploadServiceResponse->getBody()->getContents();
+            if ($uploadServiceResponse->getStatusCode() == 200) {
+                $result['callback'] = 'success';
+                $result['contextWrites']['to'] = json_decode($uploadServiceResponse->getBody());
+            }
+            else {
+                $result['callback'] = 'error';
+                $result['contextWrites']['to']['status_code'] = 'API_ERROR';
+                $result['contextWrites']['to']['status_msg'] = is_array($uploadServiceResponseBody) ? $uploadServiceResponseBody : json_decode($uploadServiceResponseBody);
             }
         } else {
             $result['callback'] = 'error';
             $result['contextWrites']['to']['status_code'] = 'API_ERROR';
-            $result['contextWrites']['to']['status_msg'] = json_decode($responseBody);
+            $result['contextWrites']['to']['status_msg'] = is_array($responseBody) ? $responseBody : json_decode($responseBody);
         }
-
-    } catch (\GuzzleHttp\Exception\ClientException $exception) {
-
-        $responseBody = $exception->getResponse()->getBody()->getContents();
-        if(empty(json_decode($responseBody))) {
-            $out = $responseBody;
-        } else {
-            $out = json_decode($responseBody);
-        }
+    } catch (\GuzzleHttp\Exception\BadResponseException $exception) {
         $result['callback'] = 'error';
         $result['contextWrites']['to']['status_code'] = 'API_ERROR';
-        $result['contextWrites']['to']['status_msg'] = $out;
-
-    } catch (GuzzleHttp\Exception\ServerException $exception) {
-
-        $responseBody = $exception->getResponse()->getBody()->getContents();
-        if(empty(json_decode($responseBody))) {
-            $out = $responseBody;
-        } else {
-            $out = json_decode($responseBody);
-        }
-        $result['callback'] = 'error';
-        $result['contextWrites']['to']['status_code'] = 'API_ERROR';
-        $result['contextWrites']['to']['status_msg'] = $out;
-
-    } catch (GuzzleHttp\Exception\ConnectException $exception) {
-
-        $responseBody = $exception->getResponse()->getBody(true);
-        $result['callback'] = 'error';
-        $result['contextWrites']['to']['status_code'] = 'INTERNAL_PACKAGE_ERROR';
-        $result['contextWrites']['to']['status_msg'] = 'Something went wrong inside the package.';
-
+        $result['contextWrites']['to']['status_msg'] = json_decode($exception->getResponse()->getBody());
     }
-
     return $response->withHeader('Content-type', 'application/json')->withStatus(200)->withJson($result);
-
 });

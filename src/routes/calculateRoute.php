@@ -4,7 +4,7 @@ $app->post('/api/BingMaps/calculateRoute', function ($request, $response) {
 
     $settings = $this->settings;
     $checkRequest = $this->validation;
-    $validateRes = $checkRequest->validate($request, ['key']);
+    $validateRes = $checkRequest->validate($request, ['key','waypoints']);
 
     if(!empty($validateRes) && isset($validateRes['callback']) && $validateRes['callback']=='error') {
         return $response->withHeader('Content-type', 'application/json')->withStatus(200)->withJson($validateRes);
@@ -12,24 +12,24 @@ $app->post('/api/BingMaps/calculateRoute', function ($request, $response) {
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['key'=>'key'];
-    $optionalParams = ['waypoints'=>'waypoints','avoid'=>'avoid','distanceBeforeFirstTurn'=>'distanceBeforeFirstTurn','heading'=>'heading','optimize'=>'optimize','routeAttributes'=>'routeAttributes','routePathOutput'=>'routePathOutput','tolerances'=>'tolerances','distanceUnit'=>'distanceUnit','dateTime'=>'dateTime','timeType'=>'timeType','maxSolutions'=>'maxSolutions','travelMode'=>'travelMode'];
+    $requiredParams = ['waypoints'=>'waypoints','key'=>'key'];
+    $optionalParams = ['avoid'=>'avoid','distanceBeforeFirstTurn'=>'distanceBeforeFirstTurn','heading'=>'heading','optimize'=>'optimize','routeAttributes'=>'routeAttributes','routePathOutput'=>'routePathOutput','tolerances'=>'tolerances','distanceUnit'=>'distanceUnit','dateTime'=>'dateTime','timeType'=>'timeType','maxSolutions'=>'maxSolutions','travelMode'=>'travelMode'];
     $bodyParams = [
        'query' => ['key','avoid','distanceBeforeFirstTurn','heading','optimize','routeAttributes','routePathOutput','tolerances','distanceUnit','dateTime','timeType','maxSolutions','travelMode']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
 
-    
-    $data['tolerances'] = \Models\Params::toString($data['tolerances'], ','); 
+    $data['tolerances'] = \Models\Params::toString($data['tolerances'], ',');
 
     $client = $this->httpClient;
     $query_str = "http://dev.virtualearth.net/REST/v1/Routes";
 
-    
-
     $requestParams = \Models\Params::createRequestBody($data, $bodyParams);
     $requestParams['headers'] = [];
+    foreach ($data['waypoints'] as $key=>$waypoint){
+        $requestParams['query']["wp.$key"] = $waypoint;
+    }
 
     try {
         $resp = $client->get($query_str, $requestParams);

@@ -65,21 +65,8 @@ Get a static map. You can also display a route on a static map, and you can requ
 | Field          | Type       | Description
 |----------------|------------|----------
 | key            | credentials| Your API key
-| centerPoint    | Map        | A point on the Earth where the map is centered. Example: centerPoint=47.610,-122.107
-| declutterPins  | Select     | Specifies whether to change the display of overlapping pushpins so that they display separately on a map. One of the following values: 1: Declutter pusphpin icons. 0 [default]: Do not declutter pushpin icons.
-| dpi            | Select     | Specifies the resolution of the labels on the image to retrieve. One of the following values: Large: High resolution labels. null [default]: Default image resolution.
-| format         | Select     | The image format to use for the static map. Must be: jpeg,gif,png
-| imagerySet     | Select     | The type of imagery. Must be: Aerial,AerialWithLabels,CanvasDark,CanvasLight,CanvasGray,Road
-| mapArea        | Map        | The geographic area to display on the map.
-| mapLayer       | Select     | A display layer that renders on top of the imagery set. Must be:TrafficFlow
-| mapSize        | Number     | The width and height in pixels of the static map output.
-| pushpin        | String     | One or more pushpin locations to display on the map. Example: 47.610,-122.107;5;P10
-| mapMetadata    | Select     | Specifies whether to return metadata for the static map instead of the image. Must be: 1: Return metadata for the specific image. An image is not returned. 0: Do not return metadata. [default]
-| query          | String     | A query string that is used to determine the map location to display.
-| zoomLevel      | Number     | A query string that is used to determine the map location to display.
-| highlightEntity| Select     | Highlights a polygon for an entity. 1 = Highlight polygon is on
-| entityType     | String     | Indicates the type of entity that should be highlighted. The entity of this type that contains the centerPoint will be highlighted.
-| style          | String     | Specifies a custom map style to apply to the road maps.
+| query    | String        | A query string that is used to determine the map location to display.
+| mapLayer    | String        | A display layer that renders on top of the imagery set. Must be: TrafficFlow
 
 ## BingMaps.getImageryMetadata
 Get metadata for imagery that is hosted by Bing Maps. The imagery metadata returned includes URLs and dimensions for imagery tiles, ranges of zoom levels, and imagery vintage information.
@@ -125,16 +112,3 @@ Return a driving route to a location from major roads in four directions (West, 
 | routeAttributes| Select     | Specify to include or exclude parts of the routes response. Must be: excludeItinerary, routePath
 | routePathOutput| Select     |  Specifies whether the response should include information about Point (latitude and longitude) values for each route’s path. Must be: Points, None
 | distanceUnit   | Select     | The units to use for distance. Must be: mi, km
-
-## BingMaps.getTrafficIncidents
-A collection of traffic incidents is returned in the response.
-
-| Field               | Type       | Description
-|---------------------|------------|----------
-| key                 | credentials| Your API key
-| mapArea             | String     | Specifies the area to search for traffic incident information. Example: 45.219,-122.325,47.610,-122.107
-| includeLocationCodes| Select     | Specifies whether to include traffic location codes in the response. Traffic location codes provide traffic incident information for pre-defined road segments. A subscription is typically required to be able to interpret these codes for a geographical area or country. Boolean
-| routeAttributes     | Select     | Specify to include or exclude parts of the routes response. Must be: excludeItinerary, routePath
-| severity            | Select     | Specifies severity level of traffic incidents to return. Must be: LowImpact,Minor,Moderate,Serious
-| type                | Number     | Specifies the type of traffic incidents to return.
-

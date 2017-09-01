@@ -12,8 +12,8 @@ $app->post('/api/BingMaps/calculateRouteFromMajorRoads', function ($request, $re
         $post_data = $validateRes;
     }
 
-    $requiredParams = ['key'=>'key'];
-    $optionalParams = ['destination'=>'destination','exclude'=>'exclude','routeAttributes'=>'routeAttributes','routePathOutput'=>'routePathOutput','distanceUnit'=>'distanceUnit'];
+    $requiredParams = ['key'=>'key','destination'=>'destination'];
+    $optionalParams = ['exclude'=>'exclude','routeAttributes'=>'routeAttributes','routePathOutput'=>'routePathOutput','distanceUnit'=>'distanceUnit'];
     $bodyParams = [
        'query' => ['key','destination','exclude','routeAttributes','routePathOutput','distanceUnit']
     ];

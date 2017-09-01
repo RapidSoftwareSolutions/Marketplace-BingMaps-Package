@@ -15,15 +15,15 @@ $app->post('/api/BingMaps/findLocationByQuery', function ($request, $response) {
     $requiredParams = ['key'=>'key','query'=>'query'];
     $optionalParams = ['includeNeighborhood'=>'includeNeighborhood','include'=>'include','maxResults'=>'maxResults'];
     $bodyParams = [
-       'query' => ['query','maxResults','includeNeighborhood','include','key']
+       'query' => ['maxResults','includeNeighborhood','include','key']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
 
-    
+    $data['q'] = $data['query'];
 
     $client = $this->httpClient;
-    $query_str = "http://dev.virtualearth.net/REST/v1/Locations/locationQuery";
+    $query_str = "http://dev.virtualearth.net/REST/v1/Locations/{$data['query']}";
 
     
 

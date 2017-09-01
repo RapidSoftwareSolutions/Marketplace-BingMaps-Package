@@ -288,7 +288,7 @@
                     "required": true,
                     "structure": {
                         "name": "point",
-                        "type": "String",
+                        "type": "Map",
                         "info": "Single point",
                         "required": false
                     },
@@ -298,7 +298,7 @@
                 },
                 {
                     "name": "bounds",
-                    "type": "String",
+                    "type": "Map",
                     "info": "Specifies the rectangular area over which to provide elevation values. A bounding box defined as a set of WGS84 latitudes and longitudes in the following order: south latitude, west longitude, north latitude, east longitude. Example: bounds=45.219,-122.234,47.61,-122.07",
                     "required": true
                 },
@@ -367,126 +367,19 @@
                     "required": true
                 },
                 {
-                    "name": "centerPoint",
-                    "type": "Map",
-                    "info": "A point on the Earth where the map is centered. Example: centerPoint=47.610,-122.107",
+                    "name": "query",
+                    "type": "String",
+                    "info": "A query string that is used to determine the map location to display.",
                     "required": true
-                },
-                {
-                    "name": "declutterPins",
-                    "type": "Select",
-                    "options": [
-                        "0",
-                        "1"
-                    ],
-                    "info": "Specifies whether to change the display of overlapping pushpins so that they display separately on a map. One of the following values: 1: Declutter pusphpin icons. 0 [default]: Do not declutter pushpin icons.",
-                    "required": false
-                },
-                {
-                    "name": "dpi",
-                    "type": "Select",
-                    "options": [
-                        "Large",
-                        "null"
-                    ],
-                    "info": "Specifies the resolution of the labels on the image to retrieve. One of the following values: Large: High resolution labels. null [default]: Default image resolution.",
-                    "required": false
-                },
-                {
-                    "name": "format",
-                    "type": "Select",
-                    "options": [
-                        "jpeg",
-                        "gif",
-                        "png"
-                    ],
-                    "info": "The image format to use for the static map. Must be: jpeg,gif,png",
-                    "required": false
-                },
-                {
-                    "name": "imagerySet",
-                    "type": "Select",
-                    "options": [
-                        "Aerial",
-                        "AerialWithLabels",
-                        "CanvasDark",
-                        "CanvasLight",
-                        "CanvasGray",
-                        "Road"
-                    ],
-                    "info": "The type of imagery. Must be: Aerial,AerialWithLabels,CanvasDark,CanvasLight,CanvasGray,Road",
-                    "required": false
-                },
-                {
-                    "name": "mapArea",
-                    "type": "Map",
-                    "info": "The geographic area to display on the map.",
-                    "required": false
                 },
                 {
                     "name": "mapLayer",
                     "type": "Select",
-                    "options": [
-                        "TrafficFlow"
-                    ],
-                    "info": "A display layer that renders on top of the imagery set. Must be:TrafficFlow",
-                    "required": false
-                },
-                {
-                    "name": "mapSize",
-                    "type": "Number",
-                    "info": "The width and height in pixels of the static map output.",
-                    "required": false
-                },
-                {
-                    "name": "pushpin",
-                    "type": "String",
-                    "info": "One or more pushpin locations to display on the map. Example: 47.610,-122.107;5;P10",
-                    "required": false
-                },
-                {
-                    "name": "mapMetadata",
-                    "type": "Select",
-                    "options": [
-                        "0",
-                        "1"
-                    ],
-                    "info": "Specifies whether to return metadata for the static map instead of the image. Must be: 1: Return metadata for the specific image. An image is not returned. 0: Do not return metadata. [default]",
-                    "required": false
-                },
-                {
-                    "name": "query",
-                    "type": "String",
-                    "info": "A query string that is used to determine the map location to display.",
-                    "required": false
-                },
-                {
-                    "name": "zoomLevel",
-                    "type": "Number",
-                    "info": "A query string that is used to determine the map location to display.",
-                    "required": false
-                },
-                {
-                    "name": "highlightEntity",
-                    "type": "Select",
-                    "options": [
-                        "1"
-                    ],
-                    "info": "Highlights a polygon for an entity. 1 = Highlight polygon is on",
-                    "required": false
-                },
-                {
-                    "name": "entityType",
-                    "type": "String",
-                    "info": "Indicates the type of entity that should be highlighted. The entity of this type that contains the centerPoint will be highlighted.",
-                    "required": false
-                },
-                {
-                    "name": "style",
-                    "type": "String",
-                    "info": "Specifies a custom map style to apply to the road maps.",
-                    "required": false
+                    "options":["TrafficFlow"],
+                    "info": " A display layer that renders on top of the imagery set. Must be: TrafficFlow",
+                    "required": true
                 }
+
             ],
             "vendorRequest": {
                 "url": "http:\/\/dev.virtualearth.net\/REST\/v1\/Imagery\/Map\/imagerySet\/centerPoint\/zoomLevel",
@@ -595,15 +488,13 @@
                 }
             ],
             "vendorRequest": {
-                "url": "http:\/\/dev.virtualearth.net\/REST\/v1\/Imagery\/Metadata\/imagerySet",
+                "url": "http://dev.virtualearth.net/REST/v1/Imagery/Metadata/{$data['imagerySet']}/{$data['centerPoint']}",
                 "method": "get",
                 "requestParameters": [
                     {
                         "type": "query",
                         "parameters": [
                             "key",
-                            "imagerySet",
-                            "centerPoint",
                             "include",
                             "orientation",
                             "uriScheme",
@@ -637,7 +528,7 @@
                     "name": "waypoints",
                     "type": "List",
                     "info": "Specifies two or more locations that define the route and that are in sequential order.",
-                    "required": false,
+                    "required": true,
                     "structure": {
                         "name": "waypoint",
                         "type": "String",
@@ -808,7 +699,7 @@
                     "name": "destination",
                     "type": "Map",
                     "info": "Specifies the final location for all the routes.",
-                    "required": false
+                    "required": true
                 },
                 {
                     "name": "exclude",
@@ -863,88 +754,6 @@
                             "routeAttributes",
                             "routePathOutput",
                             "distanceUnit"
-                        ]
-                    }
-                ]
-            },
-            "callbacks": [
-                {
-                    "name": "error",
-                    "info": "Error"
-                },
-                {
-                    "name": "success",
-                    "info": "Success"
-                }
-            ]
-        },
-        {
-            "name": "getTrafficIncidents",
-            "description": "A collection of traffic incidents is returned in the response.",
-            "args": [
-                {
-                    "name": "key",
-                    "type": "credentials",
-                    "info": "Your API key",
-                    "required": true
-                },
-                {
-                    "name": "mapArea",
-                    "type": "String",
-                    "info": "Specifies the area to search for traffic incident information. Example: 45.219,-122.325,47.610,-122.107",
-                    "required": true
-                },
-                {
-                    "name": "includeLocationCodes",
-                    "type": "Select",
-                    "options": [
-                        "true",
-                        "false"
-                    ],
-                    "info": "Specifies whether to include traffic location codes in the response. Traffic location codes provide traffic incident information for pre-defined road segments. A subscription is typically required to be able to interpret these codes for a geographical area or country. Boolean",
-                    "required": false
-                },
-                {
-                    "name": "routeAttributes",
-                    "type": "Select",
-                    "options": [
-                        "excludeItinerary",
-                        "routePath"
-                    ],
-                    "info": "Specify to include or exclude parts of the routes response. Must be: excludeItinerary, routePath",
-                    "required": false
-                },
-                {
-                    "name": "severity",
-                    "type": "Select",
-                    "options": [
-                        "LowImpact",
-                        "Minor",
-                        "Moderate",
-                        "Serious"
-                    ],
-                    "info": "Specifies severity level of traffic incidents to return. Must be: LowImpact,Minor,Moderate,Serious",
-                    "required": false
-                },
-                {
-                    "name": "type",
-                    "type": "Number",
-                    "info": "Specifies the type of traffic incidents to return.",
-                    "required": false
-                }
-            ],
-            "vendorRequest": {
-                "url": "http:\/\/dev.virtualearth.net\/REST\/v1\/Traffic\/Incidents\/mapArea\/includeLocationCodes",
-                "method": "get",
-                "requestParameters": [
-                    {
-                        "type": "query",
-                        "parameters": [
-                            "key",
-                            "mapArea",
-                            "includeLocationCodes",
-                            "severity",
-                            "type"
                         ]
                     }
                 ]

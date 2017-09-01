@@ -8,8 +8,7 @@ $routes = [
     'getStaticMap',
     'getImageryMetadata',
     'calculateRoute',
-    'calculateRouteFromMajorRoads',
-    'getTrafficIncidents'
+    'calculateRouteFromMajorRoads'
 ];
 foreach($routes as $file) {
     require __DIR__ . '/../src/routes/'.$file.'.php';

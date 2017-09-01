@@ -15,16 +15,15 @@ $app->post('/api/BingMaps/findLocationByPoint', function ($request, $response) {
     $requiredParams = ['key'=>'key','point'=>'point'];
     $optionalParams = ['includeEntityTypes'=>'includeEntityTypes','includeNeighborhood'=>'includeNeighborhood','include'=>'include'];
     $bodyParams = [
-       'query' => ['includeEntityTypes','point','includeNeighborhood','include','key']
+       'query' => ['includeEntityTypes','includeNeighborhood','include','key']
     ];
 
     $data = \Models\Params::createParams($requiredParams, $optionalParams, $post_data['args']);
-
     
     $data['includeEntityTypes'] = \Models\Params::toString($data['includeEntityTypes'], ','); 
 
     $client = $this->httpClient;
-    $query_str = "http://dev.virtualearth.net/REST/v1/Locations/point";
+    $query_str = "http://dev.virtualearth.net/REST/v1/Locations/{$data['point']}";
 
     
 
