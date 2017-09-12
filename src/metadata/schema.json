@@ -17,6 +17,10 @@
             "key"
         ]
     },
+    "steps": [
+        "Sign in https://portal.azure.com.",
+        "Add new API subscription."
+    ],
     "blocks": [
         {
             "name": "findLocationByAddress",
