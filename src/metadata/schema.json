@@ -18,8 +18,11 @@
         ]
     },
     "steps": [
-        "Sign in https://portal.azure.com.",
-        "Add new API subscription."
+        "Go to https://portal.azure.com",
+        "Search Bing Maps API for Enterprise",
+        "Click 'Create' ",
+        "Sign up or log in when prompted",
+        "In Key section choose Key1 or Key2. Copy one of these keys"
     ],
     "blocks": [
         {
